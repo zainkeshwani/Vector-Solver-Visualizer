@@ -1,5 +1,3 @@
-package VectorMath;
-
 public class Vector {
 	private double theta; //theta from horizontal in degrees
 	private double vx, vy;
