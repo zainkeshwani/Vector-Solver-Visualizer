@@ -24,17 +24,17 @@ public class VectorVisualizer extends Application {
         TextField vector1Field = new TextField();
         ChoiceBox<String> format1Box = new ChoiceBox<>();
         format1Box.getItems().addAll("Magnitude & Angle", "Components (x, y)");
-        format1Box.setValue("Magnitude & Angle");
+        format1Box.setValue("Components (x, y)");
 
         Label label2 = new Label("Enter Vector 2 (one, two):");
         TextField vector2Field = new TextField();
         ChoiceBox<String> format2Box = new ChoiceBox<>();
         format2Box.getItems().addAll("Magnitude & Angle", "Components (x, y)");
-        format2Box.setValue("Magnitude & Angle");
+        format2Box.setValue("Components (x, y)");
 
         Label operationLabel = new Label("Select Operation:");
         ChoiceBox<String> operationBox = new ChoiceBox<>();
-        operationBox.getItems().addAll("Add", "Subtract", "Dot Product", "Cross Product");
+        operationBox.getItems().addAll("Add", "Subtract", "Dot Product", "Cross Product", "Angle Between", "Projection");
         operationBox.setValue("Add");
 
         Button submitButton = new Button("Compute");
@@ -71,6 +71,8 @@ public class VectorVisualizer extends Application {
         gc = canvas.getGraphicsContext2D();
 
         Vector result = null;
+        String scalarResult = ""; // Stores the numeric result if applicable
+
         switch (operation) {
             case "Add":
                 result = Vector.add(v1, v2);
@@ -79,10 +81,16 @@ public class VectorVisualizer extends Application {
                 result = Vector.subtract(v1, v2);
                 break;
             case "Dot Product":
-                System.out.println("Dot Product: " + Vector.dotProduct(v1, v2));
+                scalarResult = "Dot Product: " + Vector.dotProduct(v1, v2);
                 break;
             case "Cross Product":
-                System.out.println("Cross Product: " + Vector.crossProduct(v1, v2));
+                scalarResult = "Cross Product: " + Vector.crossProduct(v1, v2);
+                break;
+            case "Angle Between":
+                scalarResult = "Angle Between: " + Vector.angleBetween(v1, v2) + " degrees";
+                break;
+            case "Projection":
+                result = Vector.projection(v1, v2);
                 break;
         }
 
@@ -93,11 +101,24 @@ public class VectorVisualizer extends Application {
         BorderPane root = new BorderPane();
         root.setCenter(canvas);
 
-        Scene scene = new Scene(root, WIDTH, HEIGHT);
+        // Label and TextField for scalar results
+        Label resultLabel = new Label("If your answer produced a number and not a vector:");
+        TextField resultField = new TextField(scalarResult);
+        resultField.setEditable(false);
+
+        
+        VBox bottomBox = new VBox(5, resultLabel, resultField);
+        bottomBox.setPadding(new Insets(-10, 50, 50, 50));
+
+        root.setBottom(bottomBox);
+
+        Scene scene = new Scene(root, WIDTH, HEIGHT + 50);
         stage.setScene(scene);
         stage.setTitle("Vector Visualization");
         stage.show();
     }
+
+
 
     private void drawVector(Vector v, Color color) {
         gc.setStroke(color);
@@ -107,7 +128,7 @@ public class VectorVisualizer extends Application {
         gc.strokeLine(ORIGIN_X, ORIGIN_Y, endX, endY);
 
         double arrowSize = 10;
-        double angle = Math.atan2(-v.gety(), v.getx());
+        double angle = Math.atan2(v.gety(), v.getx());
         double arrowX1 = endX - arrowSize * Math.cos(angle - Math.PI / 6);
         double arrowY1 = endY + arrowSize * Math.sin(angle - Math.PI / 6);
         double arrowX2 = endX - arrowSize * Math.cos(angle + Math.PI / 6);
