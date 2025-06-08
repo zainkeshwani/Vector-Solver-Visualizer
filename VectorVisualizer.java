@@ -20,13 +20,13 @@ public class VectorVisualizer extends Application {
     }
 
     private void showInputStage(Stage stage) {
-        Label label1 = new Label("Enter Vector 1 (one, two):");
+        Label label1 = new Label("Enter Vector 1 (field one, field two):");
         TextField vector1Field = new TextField();
         ChoiceBox<String> format1Box = new ChoiceBox<>();
         format1Box.getItems().addAll("Magnitude & Angle", "Components (x, y)");
         format1Box.setValue("Components (x, y)");
 
-        Label label2 = new Label("Enter Vector 2 (one, two):");
+        Label label2 = new Label("Enter Vector 2 (field one, field two):");
         TextField vector2Field = new TextField();
         ChoiceBox<String> format2Box = new ChoiceBox<>();
         format2Box.getItems().addAll("Magnitude & Angle", "Components (x, y)");
